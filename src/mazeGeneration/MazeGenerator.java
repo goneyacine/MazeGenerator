@@ -5,8 +5,8 @@ import java.awt.*;
 import javax.swing.*;
 public class MazeGenerator {
 	
-    
-    public static void generateMaze(Board board, int[] boardScale,int nodeScale,int[] boardPosition) {
+    public Board board;
+    public void generateMaze(int[] boardScale,int nodeScale,int[] boardPosition) {
     	
     	//setting up the maze board
     	board = new Board(boardScale,nodeScale,boardPosition);
@@ -20,7 +20,7 @@ public class MazeGenerator {
     
     
     //use this method only when setting up board
-   private static void deleteExtraWalls(Board board) {
+   private void deleteExtraWalls(Board board) {
     	
        for(int x = 0; x < board.scale[0] / board.nodeScale;x++) {
     	   
