@@ -25,7 +25,7 @@ public class MazeGenerator {
        for(int x = 0; x < board.scale[0] / board.nodeScale;x++) {
     	   
     	   for(int y = 0; y < board.scale[1] / board.nodeScale;y++ ) {
-    		   //find witch walls we should delete
+    		   //find wich walls we should delete
     		   if (x <  board.scale[0] / board.nodeScale - 1)
     			   Hole.makeHole(board.nodes[x][y], board.nodes[x][y].rightWall);
     		   else if (x > 0)

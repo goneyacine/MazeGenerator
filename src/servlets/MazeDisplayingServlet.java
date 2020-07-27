@@ -1,27 +1,29 @@
 package servlets;
 
 import javax.imageio.ImageIO;
+import javax.servlet.ServletOutputStream;
 import javax.servlet.http.*;
 import mazeGeneration.*;
 import mazeGeneration.MazeObjects.*;
 import java.awt.*;
 import java.awt.image.BufferedImage;
-import java.io.File;
 import java.io.IOException;
-import java.net.URL;
 import java.util.*;
 import java.util.List;
+
 public class MazeDisplayingServlet extends HttpServlet {
 
-	protected void doPost(HttpServletRequest request,HttpServletResponse response) throws IOException {
+	protected void doGet(HttpServletRequest request,HttpServletResponse response) throws IOException {
 		
-		response.setContentType("text/html");
+		response.setContentType("image/jpeg");
 		//setting up the maze board and generating the maze
 		Board board = null;
 		int[] boardScale = {800,800};
 		int nodeScale = 20;
 		int[] boardPosition = {50,50};
-	    MazeGenerator.generateMaze(board, boardScale, nodeScale, boardPosition);
+		MazeGenerator  mazeGenerator = new MazeGenerator();
+	    mazeGenerator.generateMaze(boardScale, nodeScale, boardPosition);
+	    board = mazeGenerator.board;
 	    //finding the lines that we should draw
 	    List<MazeLine> lines = new ArrayList<>();
 	    
@@ -45,16 +47,16 @@ public class MazeDisplayingServlet extends HttpServlet {
 	    	}
 	    	
 	    }
-	    //creating the graphic object 
-	    BufferedImage mazeImage = new BufferedImage(boardScale[0],boardScale[1],BufferedImage.TYPE_INT_ARGB);
-	    Graphics2D g2d = mazeImage.createGraphics(); 
-	    for(MazeLine line : lines) 
-	    	g2d.drawLine(line.x1, line.y1, line.x2, line.y2);
-	    //creating the maze image file
-	    URL location = MazeDisplayingServlet.class.getProtectionDomain().getCodeSource().getLocation();
-	    String mazeImageFilePath = location.getPath().toString().replace("/WEB-INF/classes/", "/Resources/mazeImage");
-	    File mazeImageFile = new File(mazeImageFilePath);
-	    ImageIO.write(mazeImage, "png", mazeImageFile);
-	}
-
+	    //creating the maze image to display it on the web page
+	    BufferedImage mazeImage = new BufferedImage(boardScale[0],boardScale[1],BufferedImage.TYPE_INT_RGB);
+	    Graphics2D g2d = mazeImage.createGraphics();
+	    g2d.setColor(Color.WHITE);
+	    g2d.fillRect(0, 0, mazeImage.getWidth(), mazeImage.getHeight());
+	    g2d.setColor(Color.BLACK);
+	    for(MazeLine line : lines)
+	    	g2d.drawLine(line.x1,line.y1,line.x2,line.y2);
+	    ServletOutputStream os = response.getOutputStream();
+	    ImageIO.write(mazeImage,"jpeg", os);	
 }
+}
+
