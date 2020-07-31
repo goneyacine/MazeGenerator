@@ -6,39 +6,13 @@ import javax.swing.*;
 public class MazeGenerator {
 	
     public Board board;
-    public void generateMaze(int[] boardScale,int nodeScale,int[] boardPosition) {
+    public void generateMaze(int[] boardScale,int nodeScale) throws Exception {
     	
     	//setting up the maze board
-    	board = new Board(boardScale,nodeScale,boardPosition);
+    	board = new Board(boardScale,nodeScale);
     	//setting up nodes 
     	setUpBoardNodes(board);
-    	//deleting the extra walls
-    	deleteExtraWalls(board);
-    	
-    }
-    
-    
-    
-    //use this method only when setting up board
-   private void deleteExtraWalls(Board board) {
-    	
-       for(int x = 0; x < board.scale[0] / board.nodeScale;x++) {
-    	   
-    	   for(int y = 0; y < board.scale[1] / board.nodeScale;y++ ) {
-    		   //find wich walls we should delete
-    		   if (x <  board.scale[0] / board.nodeScale - 1)
-    			   Hole.makeHole(board.nodes[x][y], board.nodes[x][y].rightWall);
-    		   else if (x > 0)
-    			   Hole.makeHole(board.nodes[x][y], board.nodes[x][y].leftWall);
-    		   else if (y > 0)
-    			   Hole.makeHole(board.nodes[x][y], board.nodes[x][y].topWall);
-    		   else if (y < board.scale[1] / board.nodeScale - 1)
-    			   Hole.makeHole(board.nodes[x][y], board.nodes[x][y].buttonWall);
-    		   
-    	   }
-    	   
-       }
-       
+   
     }
     
     private static void setUpBoardNodes(Board board) {
@@ -48,7 +22,7 @@ public class MazeGenerator {
     	for(int x = 0; x <  board.scale[0] / board.nodeScale;x++) {
     		
     		for(int y = 0; y <  board.scale[1] / board.nodeScale; y++) {
-    			int [] nodePosition = { board.scale[0] / board.nodeScale * x + board.position[0], board.scale[1] / board.nodeScale * y + board.position[1]};
+    			int [] nodePosition = { ((board.scale[0] / board.nodeScale) + board.nodeScale) * x,(( board.scale[1] / board.nodeScale) + board.nodeScale)   * y};
     		    Node node = new Node(board.nodeScale,nodePosition);
     			nodes[x][y] = node;
     		}

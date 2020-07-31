@@ -5,14 +5,12 @@ public class Board {
 	
 	public int[] scale;
 	public int nodeScale;
-	public int[] position;
 	public Node[][] nodes;
 	
-	public Board(int[] scale,int nodesScale,int[] position) {
+	public Board(int[] scale,int nodesScale) {
 	
 		this.scale = scale;
-		this.nodeScale = nodesScale;
-		this.position = position;
+		this.nodeScale = nodesScale;;
 		
 	}
 
