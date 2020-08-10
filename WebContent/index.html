@@ -1,62 +1,81 @@
 <!DOCTYPE html>
 <html>
 <head>
-<meta charset="ISO-8859-1">
-<title>Maze Generator</title>
 <style>
-@import url("https://fonts.googleapis.com/css?family=Montserrat&display=swap");
-body {
-  width: 100vw;
-  height: 100vh;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  flex-direction: column;
-  background: #f3f0f1;
-  .button {
-   
-    }
-    &:nth-child(1) {
-      box-shadow: -6px -6px 10px rgba(255, 255, 255, 0.8),
-        6px 6px 10px rgba(0, 0, 0, 0.2);
-      color: #6f6cde;
-      &:hover {
-        opacity: 0.3;
-        box-shadow: -6px -6px 10px rgba(255, 255, 255, 0.8),
-          6px 6px 10px rgba(0, 0, 0, 0.2);
-      }
-      &:active {
-        opacity: 1;
-        box-shadow: inset -4px -4px 8px rgba(255, 255, 255, 0.5),
-          inset 8px 8px 16px rgba(0, 0, 0, 0.1);
-        color: #79e3b6;
-      }
-    }
-    &:nth-child(2) {
-      opacity: 0.3;
-      box-shadow: -6px -6px 10px rgba(255, 255, 255, 0.8),
-        6px 6px 10px rgba(0, 0, 0, 0.2);
-      color: #6f6cde;
-    }
-    &:nth-child(3) {
-      box-shadow: inset -4px -4px 8px rgba(255, 255, 255, 0.5),
-        inset 8px 8px 16px rgba(0, 0, 0, 0.1);
-      color: #79e3b6;
-      &:hover {
-        opacity: 1;
-        box-shadow: -6px -6px 10px rgba(255, 255, 255, 0.8),
-          6px 6px 10px rgba(0, 0, 0, 0.2);
-      }
-    }
-  }
+input {
+	background:linear-gradient(to bottom, #299eb0 5%, #07e870 100%);
+	background-color:#299eb0;
+	border-radius:30px;
+	border:2px solid #407680;
+	display:inline-block;
+	cursor:pointer;
+	color:#ffffff;
+	font-family:Arial;
+	font-size:28px;
+	padding:17px 39px;
+	text-decoration:none;
+	text-shadow:0px 1px 0px #2b9944;
+	margin: 50px 38%;
+}
+input:hover {
+	background:linear-gradient(to bottom, #07e870 5%, #299eb0 100%);
+	background-color:#07e870;
+}
+input:active {
+	position:relative;
+	top:1px;
+}
+h1{
+font-size:70px;
+margin: 10px 30%;
+}
+h2{
+font-size:55px;
+margin: 30px 30px;
 }
 
+h3{
+font-size:40px;
+margin: 10px 30px;
+}
+
+h4{
+font-size:25px;
+margin: 10px 30px;
+}
 </style>
+<meta charset="ISO-8859-1">
+<title>Maze Generator</title>
 </head>
 <body>
-<div class="button"><span>Generate Maze</span>
-<form action = "mazeGenerator" method = "post"></div></form>
+<h1>Maze Generator</h1>
+<form action  = "mazeGenerator" method = "post"><input type = "submit" value = "Generate Maze"></form>
+<h2> About the algorithms i used to make this website </h2>
+<h3>First : <a href = "https://en.wikipedia.org/wiki/Maze_generation_algorithm">recursive division algorithm</a></h3>
 
+<h4>Mazes can be created with recursive division, an algorithm which works as follows:
+ Begin with the maze's space with no walls. Call this a chamber. Divide the chamber with a randomly positioned wall
+  (or multiple walls) where each wall contains a randomly positioned passage opening within it. 
+  Then recursively repeat the process on the subchambers until all chambers are minimum sized. 
+  This method results in mazes with long straight walls crossing their space,
+ making it easier to see which areas to avoid.
+Recursive Maze generation
+For example, in a rectangular maze, build at random points two walls that are perpendicular to each other.
+ These two walls divide the large chamber into four smaller chambers separated by four walls. 
+ Choose three of the four walls at random, and open a one cell-wide hole at a random point in each of the three.
+  Continue in this manner recursively, until every chamber has a width of one cell in either of the two directions.</h4>
 </body>
+<h3>Second :<a href = "https://en.wikipedia.org/wiki/A*_search_algorithm">A* pathfinding(search) algorithm</a></h3>
+<h4>A* (pronounced "A-star") is a graph traversal and path search algorithm, 
+which is often used in many fields of computer science due to its completeness, optimality,
+ and optimal efficiency.[1] One major practical drawback is its space complexity,
+  as it stores all generated nodes in memory. Thus, in practical travel-routing systems,
+   it is generally outperformed by algorithms which can pre-process the graph to attain better performance,
+   [2] as well as memory-bounded approaches; however, 
+  A* is still the best solution in many cases.[3]
+Peter Hart, Nils Nilsson and Bertram Raphael of Stanford Research Institute (now SRI International)
+ first published the algorithm in 1968.[4] It can be seen as an extension of Edsger Dijkstra's 1959 algorithm.
+  A* achieves better performance by using heuristics to guide its search.</h4>
+
 
 </html>
