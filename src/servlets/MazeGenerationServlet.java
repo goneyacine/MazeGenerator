@@ -25,28 +25,29 @@ public class MazeGenerationServlet extends HttpServlet {
 		  response.setContentType("text/html");
 		//setting up the maze board and generating the maze
 		Board board = null;
-		int[] boardScale = {880,880};
-		int nodeScale = 60;
+		int[] boardScale = {40 * 25 ,40 * 25};
+		int nodeScale = 40;
 		MazeGenerator  mazeGenerator = new MazeGenerator();
-	    try {
-			mazeGenerator.generateMaze(boardScale, nodeScale,4);
+	    try { 
+			mazeGenerator.generateMaze(boardScale, nodeScale,3);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	    board = mazeGenerator.board;
 	      //creating the maze image to display it on the web page
-	    BufferedImage mazeImage = new BufferedImage(boardScale[0] + 195,boardScale[1] + 195,BufferedImage.TYPE_INT_RGB);
+	    BufferedImage mazeImage = new BufferedImage(boardScale[0]  + 700,boardScale[1] + 700,BufferedImage.TYPE_INT_RGB);
 	    Graphics2D g2d = mazeImage.createGraphics();
 	    g2d.setColor(Color.WHITE);
 	    g2d.fillRect(0, 0, mazeImage.getWidth(), mazeImage.getHeight());
 	    g2d.setColor(Color.BLACK);
-	    for(Node[] nodes : board.nodes) {
+	    for(List<Node> nodes : board.nodes) {
 	    	for(Node node : nodes) {
 	    		
-	    		if(node.isObstical)
-	    			g2d.fillRect(node.worldPosition[0] + 20,node.worldPosition[1] + 20,board.nodeScale,board.nodeScale);
+	    	   if(node.isObstical)
+	    		g2d.fillRect(node.worldPosition[0] + 30,node.worldPosition[1] + 30,board.nodeScale + 20,board.nodeScale + 20);
 	    		else
-	    			g2d.drawRect(node.worldPosition[0] + 20,node.worldPosition[1] + 20,board.nodeScale,board.nodeScale);
+	    		g2d.drawRect(node.worldPosition[0] + 30,node.worldPosition[1] + 30,board.nodeScale + 20,board.nodeScale + 20);
+	
 	    	}
 	   } 	
 	    File file = new File(getServletContext().getRealPath("mazeImage"));
@@ -57,6 +58,7 @@ public class MazeGenerationServlet extends HttpServlet {
 	    	
 	    ImageIO.write(mazeImage,"jpeg", file);
 	    PrintWriter out  = response.getWriter();
+	    out.print("<head><title>Generated Maze</title></head>");
 	    out.print("<img src = " + file.getAbsolutePath() + ">");
 	    }
 }

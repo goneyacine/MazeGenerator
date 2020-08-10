@@ -1,11 +1,11 @@
 package mazeGeneration.MazeObjects;
 
-
+import java.util.*;
 public class Board {
 	
 	public int[] scale;
 	public int nodeScale;
-	public Node[][] nodes;
+	public List<List<Node>> nodes;
 	
 	public Board(int[] scale,int nodesScale) {
 	

@@ -2,9 +2,61 @@
 <html>
 <head>
 <meta charset="ISO-8859-1">
-<title>Insert title here</title>
+<title>Maze Generator</title>
+<style>
+@import url("https://fonts.googleapis.com/css?family=Montserrat&display=swap");
+body {
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  background: #f3f0f1;
+  .button {
+   
+    }
+    &:nth-child(1) {
+      box-shadow: -6px -6px 10px rgba(255, 255, 255, 0.8),
+        6px 6px 10px rgba(0, 0, 0, 0.2);
+      color: #6f6cde;
+      &:hover {
+        opacity: 0.3;
+        box-shadow: -6px -6px 10px rgba(255, 255, 255, 0.8),
+          6px 6px 10px rgba(0, 0, 0, 0.2);
+      }
+      &:active {
+        opacity: 1;
+        box-shadow: inset -4px -4px 8px rgba(255, 255, 255, 0.5),
+          inset 8px 8px 16px rgba(0, 0, 0, 0.1);
+        color: #79e3b6;
+      }
+    }
+    &:nth-child(2) {
+      opacity: 0.3;
+      box-shadow: -6px -6px 10px rgba(255, 255, 255, 0.8),
+        6px 6px 10px rgba(0, 0, 0, 0.2);
+      color: #6f6cde;
+    }
+    &:nth-child(3) {
+      box-shadow: inset -4px -4px 8px rgba(255, 255, 255, 0.5),
+        inset 8px 8px 16px rgba(0, 0, 0, 0.1);
+      color: #79e3b6;
+      &:hover {
+        opacity: 1;
+        box-shadow: -6px -6px 10px rgba(255, 255, 255, 0.8),
+          6px 6px 10px rgba(0, 0, 0, 0.2);
+      }
+    }
+  }
+}
+
+</style>
 </head>
 <body>
-<form action = "mazeGenerator" method = "post"> <input type = "submit" value = "Genrate Maze"> </form>
+<div class="button"><span>Generate Maze</span>
+<form action = "mazeGenerator" method = "post"></div></form>
+
 </body>
+
 </html>

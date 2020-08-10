@@ -6,5 +6,4 @@ public class Room {
 	public Room(Node[][] nodes) {
 		this.nodes = nodes;
 	}
-	
 }
