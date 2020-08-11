@@ -8,6 +8,7 @@ public class MazeGenerator {
     public Board board;
     private Room defaultRoom;
     private int isStart = 1;
+    private int startRandomRow,startRandomColumn;
     public void generateMaze(int[] boardScale,int nodeScale,int divisionOperations) throws Exception {
     	//setting up the maze board
     	board = new Board(boardScale,nodeScale);
@@ -15,7 +16,7 @@ public class MazeGenerator {
     	setUpBoardNodes(board);
     	//dividing the room
     	divideRooms(divisionOperations,board.nodes);
-   
+    	makeHoles();
     }
     
     private void setUpBoardNodes(Board board) {
@@ -35,25 +36,33 @@ public class MazeGenerator {
     	board.nodes = nodes;
     }  
     private void divideRooms(int divisionOperations,List<List<Node>> nodes) {
-    	if(nodes == null || nodes.size() <= 3 ||nodes.get(0).size() <= 3 || divisionOperations < 1)
+    	
+    	if(nodes == null || nodes.size() <= 2 ||nodes.get(0).size() <= 2 || divisionOperations < 1)
     	  return;
     	//generate random walls
-    	int _IsStart_ = (isStart == 1) ? 10 : 4;
+    	int _IsStart_ = (isStart == 1) ? 18 : 4;
     	int randomRow = (int)(Math.random() * (nodes.size() - _IsStart_));
-    	if(randomRow < 10 && isStart == 1)
-    	   randomRow = 10;
+    	if(randomRow < 18 && isStart == 1)
+    	   randomRow = 18;
     	else if (randomRow < 2 && isStart == 0)
     		randomRow = 2;
     	int randomColumn = (int)(Math.random() * (nodes.get(0).size() - _IsStart_));
-    	if(randomColumn < 10 && isStart == 1)
-    	   randomColumn = 10;   
+    	if(randomColumn < 18 && isStart == 1)
+    	   randomColumn = 18;   
     	else if (randomColumn < 2 && isStart == 0)
     		randomColumn = 2;
-    	isStart = 0;
-        for(Node node : nodes.get(randomRow))
+    	if(isStart == 1) {
+    	  startRandomColumn = randomColumn;
+    	  startRandomRow = randomRow;
+    	  isStart = 0;
+    	}
+        for(Node node : nodes.get(randomRow)) {
         	node.isObstical = true;  
-        for(List<Node> row : nodes)
+        }
+        for(List<Node> row : nodes) {
         	row.get(randomColumn).isObstical = true;
+        }
+      
        divisionOperations --;
        updateRooms(nodes,divisionOperations);      
     }
@@ -112,5 +121,93 @@ public class MazeGenerator {
       divideRooms(divisionOperations,roomB);
       divideRooms(divisionOperations,roomC);
       divideRooms(divisionOperations,roomD);
-      }
+    }
+    private void makeHoles() {
+    	//first checking and finding the needed walls parts
+    	List<List<Node>> parts = new ArrayList<>();
+    	  //vertical checking
+    	for(int x = 0; x < board.nodes.size();x++) {
+    		List<Node> part = new ArrayList<>();
+    		for(int y = 0; y < board.nodes.get(0).size() - 1;y++) {
+    			if(y == 0) {
+    				if(part.size() > 0)
+    					parts.add(part);
+    				part = new ArrayList<>();
+    			}
+    			if(board.nodes.get(x).get(y).isObstical) {
+    				if(x == startRandomRow && y <= startRandomColumn)
+    					continue;
+    				else {
+    					if(x == 0 && x == board.nodes.size() - 1) {
+    						part.add(board.nodes.get(x).get(y));
+    					}else if(x > 0 && !board.nodes.get(x - 1).get(y).isObstical && x == board.nodes.size() - 1){
+    						part.add(board.nodes.get(x).get(y));
+    					}else if(x == 0 && x < board.nodes.size() - 1 && !board.nodes.get(x + 1).get(y).isObstical){
+    						part.add(board.nodes.get(x).get(y));
+    					}else if (x > 0&& !board.nodes.get(x - 1).get(y).isObstical && x < board.nodes.size() - 1 && !board.nodes.get(x + 1).get(y).isObstical){
+    						part.add(board.nodes.get(x).get(y));
+    					}else {
+    					
+    						if(part.size() > 0) {
+    							parts.add(part);
+    							part = new ArrayList<>();
+    						}
+    						continue;
+    					}
+    				}
+    					
+    			}else {
+    				if(part.size() <= 0)
+    					continue;
+    				else {
+    					parts.add(part);
+    					part = new ArrayList<>();
+    					continue;
+    				}
+    			}
+    		}
+    	}
+    	//vertical checking 
+    	for(int y = 0; y < board.nodes.get(0).size();y++) {
+    		List<Node> part = new ArrayList<>();
+    		for(int x = 0; x < board.nodes.size() - 1;x++) {
+    			if(y == 0) {
+    				if(part.size() > 0)
+    					parts.add(part);
+    				part = new ArrayList<>();
+    			}
+    			if(board.nodes.get(x).get(y).isObstical) {
+    					if(y == 0 && y == board.nodes.size() - 1) {
+    						part.add(board.nodes.get(x).get(y));
+    					}else if(y > 0 && !board.nodes.get(x).get(y - 1).isObstical && y == board.nodes.get(0).size() - 1){
+    						part.add(board.nodes.get(x).get(y));
+    					}else if(y == 0 && y< board.nodes.get(0).size() - 1 && !board.nodes.get(x).get(y + 1).isObstical){
+    						part.add(board.nodes.get(x).get(y));
+    					}else if (y >  0 && !board.nodes.get(x).get(y - 1).isObstical && y < board.nodes.get(0).size() - 1 && !board.nodes.get(x).get(y + 1).isObstical){
+    						part.add(board.nodes.get(x).get(y));
+    					}else {
+    					
+    						if(part.size() > 0) {
+    							parts.add(part);
+    							part = new ArrayList<>();
+    						}
+    						continue;
+    					}
+    
+    			}else {
+    				if(part.size() <= 0)
+    					continue;
+    				else {
+    					parts.add(part);
+    					part = new ArrayList<>();
+    					continue;
+    				}
+    			}
+    		}
+    	}
+    	//second : making hole 
+    	for(List<Node> part : parts) {
+            part.get((int)(Math.random() * (part.size() - 1))).isObstical = false;    		
+    	}
+    }
 }

@@ -26,7 +26,7 @@ public class MazeGenerationServlet extends HttpServlet {
 		//setting up the maze board and generating the maze
 		Board board = null;
 		int[] boardScale = {40 * 25 ,40 * 25};
-		int nodeScale = 40;
+		int nodeScale = 25;
 		MazeGenerator  mazeGenerator = new MazeGenerator();
 	    try { 
 			mazeGenerator.generateMaze(boardScale, nodeScale,3);
@@ -35,7 +35,7 @@ public class MazeGenerationServlet extends HttpServlet {
 		}
 	    board = mazeGenerator.board;
 	      //creating the maze image to display it on the web page
-	    BufferedImage mazeImage = new BufferedImage(boardScale[0]  + 700,boardScale[1] + 700,BufferedImage.TYPE_INT_RGB);
+	    BufferedImage mazeImage = new BufferedImage(boardScale[0]  + 1800 ,boardScale[1] + 1800,BufferedImage.TYPE_INT_RGB);
 	    Graphics2D g2d = mazeImage.createGraphics();
 	    g2d.setColor(Color.WHITE);
 	    g2d.fillRect(0, 0, mazeImage.getWidth(), mazeImage.getHeight());
@@ -44,9 +44,9 @@ public class MazeGenerationServlet extends HttpServlet {
 	    	for(Node node : nodes) {
 	    		
 	    	   if(node.isObstical)
-	    		g2d.fillRect(node.worldPosition[0] + 30,node.worldPosition[1] + 30,board.nodeScale + 20,board.nodeScale + 20);
+	    		g2d.fillRect(node.worldPosition[0] + 90,node.worldPosition[1] + 90,board.nodeScale + 40,board.nodeScale + 40);
 	    		else
-	    		g2d.drawRect(node.worldPosition[0] + 30,node.worldPosition[1] + 30,board.nodeScale + 20,board.nodeScale + 20);
+	    		g2d.drawRect(node.worldPosition[0] + 90,node.worldPosition[1] + 90,board.nodeScale + 40,board.nodeScale + 40);
 	
 	    	}
 	   } 	
@@ -59,7 +59,7 @@ public class MazeGenerationServlet extends HttpServlet {
 	    ImageIO.write(mazeImage,"jpeg", file);
 	    PrintWriter out  = response.getWriter();
 	    out.print("<head><title>Generated Maze</title></head>");
-	    out.print("<img src = " + file.getAbsolutePath() + ">");
+	    out.print("<img style=\"-webkit-user-select: none;margin: auto;cursor: zoom-in;\" src = " + file.getAbsolutePath() +  " width=\"800\" height=\"800\" >");
 	    }
 }
 
