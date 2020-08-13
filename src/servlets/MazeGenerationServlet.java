@@ -42,12 +42,18 @@ public class MazeGenerationServlet extends HttpServlet {
 	    g2d.setColor(Color.BLACK);
 	    for(List<Node> nodes : board.nodes) {
 	    	for(Node node : nodes) {
-	    		
+	    		g2d.setColor(Color.BLACK);
 	    	   if(node.isObstical)
 	    		g2d.fillRect(node.worldPosition[0] + 90,node.worldPosition[1] + 90,board.nodeScale + 40,board.nodeScale + 40);
 	    		else
 	    		g2d.drawRect(node.worldPosition[0] + 90,node.worldPosition[1] + 90,board.nodeScale + 40,board.nodeScale + 40);
-	
+	    	   g2d.setColor(Color.GREEN);
+	            if(node.toOpen)
+	           g2d.fillRect(node.worldPosition[0] + 90,node.worldPosition[1] + 90,board.nodeScale + 40,board.nodeScale + 40);
+	    	   g2d.setColor(Color.RED);
+	            if(node.isOpened)
+	           g2d.fillRect(node.worldPosition[0] + 90,node.worldPosition[1] + 90,board.nodeScale + 40,board.nodeScale + 40);
+	            
 	    	}
 	   } 	
 	    File file = new File(getServletContext().getRealPath("mazeImage"));

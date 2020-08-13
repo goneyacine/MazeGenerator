@@ -3,12 +3,16 @@ package mazeGeneration;
 import mazeGeneration.MazeObjects.*;
 import java.util.List;
 import java.util.*;
+
 public class MazeGenerator {
 	
     public Board board;
     private Room defaultRoom;
     private int isStart = 1;
     private int startRandomRow,startRandomColumn;
+    private List<Node> nodesToOpen = new ArrayList<>();
+    public List<Node> openedNodes = new ArrayList<>();
+    
     public void generateMaze(int[] boardScale,int nodeScale,int divisionOperations) throws Exception {
     	//setting up the maze board
     	board = new Board(boardScale,nodeScale);
@@ -17,8 +21,16 @@ public class MazeGenerator {
     	//dividing the room
     	divideRooms(divisionOperations,board.nodes);
     	makeHoles();
+    	for(int i = board.nodes.get(0).size() - 1;i > 1;i --) {
+    		if(board.nodes.get(board.nodes.size() - 1).get(i).isObstical) {
+    			board.nodes.get(board.nodes.size() - 1).get(i).isObstical = false;
+    			if(!board.nodes.get(board.nodes.size() - 1).get(i + 1).isObstical) {
+    				break;
+    			}	
+    	}
     }
-    
+    	findPath();
+ }
     private void setUpBoardNodes(Board board) {
     	//creating the nodes array
     	List<List<Node>> nodes = new ArrayList<>();
@@ -27,7 +39,8 @@ public class MazeGenerator {
     		List<Node> row = new ArrayList<>();
     		for(int y = 0; y <  board.scale[1] / board.nodeScale; y++) {
     			int [] nodePosition = { ((board.scale[0] / board.nodeScale) + board.nodeScale) * x,(( board.scale[1] / board.nodeScale) + board.nodeScale)   * y};
-    		    Node node = new Node(board.nodeScale,nodePosition);
+    			int[] localNodePosition = {nodes.size(),row.size()};
+    		    Node node = new Node(board.nodeScale,nodePosition,localNodePosition);
     			row.add(node);
     		}
     		nodes.add(row);
@@ -209,5 +222,91 @@ public class MazeGenerator {
     	for(List<Node> part : parts) {
             part.get((int)(Math.random() * (part.size() - 1))).isObstical = false;    		
     	}
+    }
+    public void findPath() {
+    	if(openedNodes.size() == 0) {
+    		//initial steps
+    		Node startNode = board.nodes.get(0).get(0);
+    		Node endNode = board.nodes.get(board.nodes.size() - 1).get(board.nodes.get(0).size() - 1);
+    		startNode.gCost = distance(startNode.worldPosition[0],startNode.worldPosition[1],startNode.worldPosition[0],startNode.worldPosition[1]);
+    	    startNode.hCost = distance(endNode.worldPosition[0],endNode.worldPosition[1],startNode.worldPosition[0],startNode.worldPosition[1]);
+    		startNode.fCost = startNode.hCost + startNode.gCost;
+    		openNode(startNode);
+    	}
+    	if(nodesToOpen.size() == 0)
+    		return;
+    	openNode(nodesToOpen.get(0));
+    }
+    private void openNode(Node node) {
+    	if(node.localPosition[0] == board.nodes.size() - 1 && node.localPosition[1] == board.nodes.get(0).size() - 1)
+    		return;
+    	nodesToOpen.remove(node);
+    	node.toOpen = false;
+		Node endNode = board.nodes.get(board.nodes.size() - 1).get(board.nodes.get(0).size() - 1);
+		node.isOpened = true;
+		openedNodes.add(node);
+		if(node.localPosition[0] -1  >= 0) {
+			Node C = board.nodes.get(node.localPosition[0] - 1).get(node.localPosition[1]);
+			C.gCost = distance(C.localPosition[0],C.localPosition[1],node.localPosition[0],node.localPosition[1]) + node.gCost;
+			C.hCost =  distance(endNode.worldPosition[0],endNode.worldPosition[1],C.worldPosition[0],C.worldPosition[1]);
+			C.fCost = C.hCost + C.gCost;
+			C.toOpen = true;
+			nodesToOpen.add(C);
+		}
+		if(node.localPosition[0] + 1 <= board.nodes.size() - 1) { 
+				Node F = board.nodes.get(node.localPosition[0] + 1).get(node.localPosition[1]);
+				F.gCost = distance(F.localPosition[0],F.localPosition[1],node.localPosition[0],node.localPosition[1]) + node.gCost;
+				F.hCost =  distance(endNode.worldPosition[0],endNode.worldPosition[1],F.worldPosition[0],F.worldPosition[1]);
+				F.fCost = F.hCost + F.gCost;
+				F.toOpen = true;
+				nodesToOpen.add(F);
+		}
+		   if(node.localPosition[1]  - 1 >= 0) {
+         	  Node G = board.nodes.get(node.localPosition[0]).get(node.localPosition[1] - 1);
+				G.gCost = distance(G.localPosition[0],G.localPosition[1],node.localPosition[0],node.localPosition[1]) + node.gCost;
+				G.hCost =  distance(endNode.worldPosition[0],endNode.worldPosition[1],G.worldPosition[0],G.worldPosition[1]);
+				G.fCost = G.hCost + G.gCost;
+				G.toOpen =  true;
+				nodesToOpen.add(G);
+			  }
+			  if(node.localPosition[1] + 1 <= board.nodes.get(0).size() - 1) {
+				  Node H  = board.nodes.get(node.localPosition[0]).get(node.localPosition[1] + 1);
+				H.gCost = distance(H.localPosition[0],H.localPosition[1],node.localPosition[0],node.localPosition[1]) + node.gCost;
+				H.hCost =  distance(endNode.worldPosition[0],endNode.worldPosition[1],H.worldPosition[0],H.worldPosition[1]);
+				H.fCost = H.hCost + H.gCost;
+				H.toOpen = true;
+				nodesToOpen.add(H);
+			  } 
+		if(nodesToOpen.size()  == 0)
+			return;
+		quickSort(0,nodesToOpen.size() - 1);
+		openNode(nodesToOpen.get(0));
+    }
+    private void quickSort(int left,int right) {
+    	  if (left >= right)
+              return;
+              int pivot = (left + right) / 2;
+              int index = partition(left, right, pivot);
+              quickSort(left, index - 1);
+              quickSort(index, right);
+    }
+    private int partition(int left,int right,int pivot) {
+    	while (left <= right) {
+            while (nodesToOpen.get(left).fCost < nodesToOpen.get(pivot).fCost)
+                left++;
+            while (nodesToOpen.get(right).fCost > nodesToOpen.get(pivot).fCost)
+                right--;
+            if (left <= right) {
+                Node temp = nodesToOpen.get(left);
+                nodesToOpen.set(left,nodesToOpen.get(right));
+                nodesToOpen.set(right,temp);
+                left++;
+                right--;
+            }
+        }
+    	return left;	
+    }
+    private int distance(int x1,int y1,int x2,int y2) {
+    	return (int) Math.sqrt(Math.pow(x1 - x2,2) + Math.pow(y1 - y2,2));
     }
 }
